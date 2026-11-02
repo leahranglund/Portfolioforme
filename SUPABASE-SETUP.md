@@ -42,4 +42,18 @@ repository.
 
 After the site is deployed, open `admin.html` directly and sign in with the user
 created above. Add, edit, publish, hide, reorder, or delete certifications and
-courses there. Published items appear on `Sertifiseringer.html`.
+courses there. For each item, use **Beskrivelse** for the short explanation that
+appears when a visitor opens the course box, and **Lenke til sertifikat** for a
+certificate or course URL. Published items appear as expandable boxes on
+`Sertifiseringer.html`.
+
+## 5. First-time checklist
+
+1. Run `supabase-setup.sql` in the Supabase SQL Editor.
+2. Create the private admin user and add its UUID to `admin_users`.
+3. Paste the Project URL and publishable/anon key into `supabase-config.js`.
+4. Deploy the site and open `admin.html`.
+5. Add a description and certificate link, then enable **Vis offentlig**.
+
+The public page only displays published rows. The description and certificate
+link are optional, so a course can also be listed without either one.

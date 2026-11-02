@@ -3,10 +3,26 @@ import { isSupabaseConfigured, supabase } from "./supabase-client.js";
 const status = document.querySelector("#certification-status");
 const list = document.querySelector("#certification-list");
 const initialCertifications = [
-    { title: "Google Skillshop", sort_order: 10 },
-    { title: "Claude Academy", sort_order: 20 },
-    { title: "HubSpot Academy", sort_order: 30 },
-    { title: "Meta Blueprint", sort_order: 40 }
+    {
+        title: "Google Skillshop",
+        description: "Nettbaserte kurs og opplæring i Googles verktøy for digital markedsføring og analyse.",
+        sort_order: 10
+    },
+    {
+        title: "Claude Academy",
+        description: "Opplæring i å bruke Claude og generativ kunstig intelligens på en effektiv måte.",
+        sort_order: 20
+    },
+    {
+        title: "HubSpot Academy",
+        description: "Kurs innen inbound marketing, innholdsproduksjon, salg og CRM.",
+        sort_order: 30
+    },
+    {
+        title: "Meta Blueprint",
+        description: "Opplæring i annonsering, innholdsstrategi og markedsføring på Metas plattformer.",
+        sort_order: 40
+    }
 ];
 
 function addTextElement(parent, tagName, className, text) {
@@ -20,23 +36,28 @@ function addTextElement(parent, tagName, className, text) {
 }
 
 function renderCertification(certification) {
-    const card = document.createElement("article");
+    const card = document.createElement("details");
     card.className = "certification-card";
 
-    addTextElement(card, "h2", "", certification.title);
+    const summary = document.createElement("summary");
+    addTextElement(summary, "h2", "", certification.title);
     if (certification.provider) {
-        addTextElement(card, "p", "certification-provider", certification.provider);
+        addTextElement(summary, "p", "certification-provider", certification.provider);
     }
     if (certification.status) {
-        addTextElement(card, "p", "certification-status-label", certification.status);
+        addTextElement(summary, "p", "certification-status-label", certification.status);
     }
+    card.append(summary);
+
+    const details = document.createElement("div");
+    details.className = "certification-details";
 
     if (certification.completed_on) {
         const date = new Date(`${certification.completed_on}T00:00:00`);
-        addTextElement(card, "p", "certification-date", date.toLocaleDateString("no-NO"));
+        addTextElement(details, "p", "certification-date", date.toLocaleDateString("no-NO"));
     }
     if (certification.description) {
-        addTextElement(card, "p", "certification-description", certification.description);
+        addTextElement(details, "p", "certification-description", certification.description);
     }
 
     if (certification.credential_url) {
@@ -45,9 +66,12 @@ function renderCertification(certification) {
         link.target = "_blank";
         link.rel = "noopener noreferrer";
         link.textContent = "Se sertifikat";
-        card.append(link);
+        details.append(link);
     }
 
+    if (details.children.length > 0) {
+        card.append(details);
+    }
     return card;
 }
 

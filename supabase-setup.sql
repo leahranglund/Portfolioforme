@@ -17,12 +17,12 @@ create table if not exists public.certifications (
     constraint certifications_title_provider_key unique (title, provider)
 );
 
-insert into public.certifications (title, sort_order, is_published)
+insert into public.certifications (title, description, sort_order, is_published)
 values
-    ('Google Skillshop', 10, true),
-    ('Claude Academy', 20, true),
-    ('HubSpot Academy', 30, true),
-    ('Meta Blueprint', 40, true)
+    ('Google Skillshop', 'Nettbaserte kurs og opplæring i Googles verktøy for digital markedsføring og analyse.', 10, true),
+    ('Claude Academy', 'Opplæring i å bruke Claude og generativ kunstig intelligens på en effektiv måte.', 20, true),
+    ('HubSpot Academy', 'Kurs innen inbound marketing, innholdsproduksjon, salg og CRM.', 30, true),
+    ('Meta Blueprint', 'Opplæring i annonsering, innholdsstrategi og markedsføring på Metas plattformer.', 40, true)
 on conflict (title, provider) do nothing;
 
 alter table public.admin_users enable row level security;

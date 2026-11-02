@@ -794,6 +794,27 @@ h2 {
     background: rgb(0 0 0 / 3%);
 }
 
+.certification-card summary {
+    display: block;
+    cursor: pointer;
+    list-style: none;
+}
+
+.certification-card summary::-webkit-details-marker {
+    display: none;
+}
+
+.certification-card summary::after {
+    float: right;
+    content: "+";
+    font-size: 1.5rem;
+    line-height: 1;
+}
+
+.certification-card[open] summary::after {
+    content: "−";
+}
+
 .certification-card h2,
 .admin-certification-item h3 {
     margin: 0 0 0.5rem;
@@ -808,6 +829,10 @@ h2 {
 .certification-card a {
     display: inline-block;
     margin-top: 0.5rem;
+}
+
+.certification-details {
+    padding-top: 0.75rem;
 }
 
 .admin-form {

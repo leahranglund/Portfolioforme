@@ -7,6 +7,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css?v=20261014-21">
     <script src="fun-fact.js?v=20261013-1" defer></script>
+    <script type="module" src="certifications.js?v=20261102-1"></script>
 </head>
 <body>
     <header>
@@ -30,28 +31,8 @@
         <section>
             <h1>Sertifiseringer og kurs</h1>
             <p>Leah Ranglund har fullført eller pågående følgende sertifiseringer og kurs:</p>
-            <div class="certification-list">
-                <article class="certification-card">
-                    <h2>Google Skillshop</h2>
-                </article>
-                <article class="certification-card">
-                    <h2>Claude Academy</h2>
-                </article>
-                <article class="certification-card">
-                    <h2>HubSpot Academy</h2>
-                </article>
-                <article class="certification-card">
-                    <h2>Meta Blueprint</h2>
-                </article>
-                <article class="certification-card">
-                    <h2>Technical Writing One</h2>
-                    <p class="certification-provider">Google for Developers</p>
-                </article>
-                <article class="certification-card">
-                    <h2>Technical Writing Two</h2>
-                    <p class="certification-provider">Google for Developers</p>
-                </article>
-            </div>
+            <p id="certification-status" role="status" aria-live="polite"></p>
+            <div id="certification-list" class="certification-list"></div>
         </section>
     </main>
     <aside class="fun-fact" aria-label="Fun fact om sertifiseringene">
