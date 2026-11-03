@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="styles.css?v=20261013-22">
     <script src="fun-fact.js?v=20261013-1" defer></script>
     <script src="cookie-consent.js?v=20261103-1" defer></script>
-    <script src="language.js?v=20261103-1" defer></script>
+    <script src="language.js?v=20261103-2" defer></script>
 </head>
 <body class="gallery-body cookie-consent-pending">
     <header>
@@ -20,6 +20,7 @@
         </div>
         <nav aria-label="Hovedmeny">
             <ul>
+                <li class="language-switcher"><a class="language-english" href="?lang=en" aria-label="Switch to English">EN</a><span aria-hidden="true"> | </span><a class="language-norwegian" href="?lang=no" aria-label="Bytt til norsk">NO</a></li>
                 <li><a href="CV/Leah_Ranglund_CV26.pdf" target="_blank" rel="noopener noreferrer">CV</a></li>
                 <li><a href="Galleri.html">Galleri</a></li>
                 <li><a href="Om-meg.html">Om meg</a></li>
@@ -39,6 +40,7 @@
     </main>
 
     <div class="image-lightbox" id="image-lightbox" role="dialog" aria-modal="true" aria-label="Forstørret bilde">
+        <p class="image-lightbox-status" role="status" aria-live="polite">Laster bilde ...</p>
         <img id="lightbox-image" src="" alt="">
     </div>
     <aside class="fun-fact" aria-label="Fun fact om galleriet">
@@ -78,6 +80,7 @@
         const carouselRing = document.querySelector("#carousel-ring");
         const lightbox = document.querySelector("#image-lightbox");
         const lightboxImage = document.querySelector("#lightbox-image");
+        const lightboxStatus = document.querySelector(".image-lightbox-status");
         const cards = [];
         const stepAngle = 360 / images.length;
         let selectedIndex = 0;
@@ -118,14 +121,30 @@
             image.decoding = "async";
 
             card.append(image);
-            card.addEventListener("click", () => {
+            card.addEventListener("click", async () => {
                 if (suppressClick) {
                     suppressClick = false;
                     return;
                 }
-                lightboxImage.src = image.dataset.fullSrc;
                 lightboxImage.alt = image.alt;
-                lightbox.classList.add("is-open");
+                lightboxImage.removeAttribute("src");
+                lightbox.classList.add("is-open", "is-loading");
+                lightboxStatus.textContent = window.siteLanguage === "en"
+                    ? "Loading image ..."
+                    : "Laster bilde ...";
+                const fullImage = new Image();
+                fullImage.src = image.dataset.fullSrc;
+                try {
+                    await fullImage.decode();
+                } catch (error) {
+                    console.warn("Kunne ikke dekode galleribildet:", error);
+                }
+                if (!lightbox.classList.contains("is-open")) {
+                    return;
+                }
+                lightboxImage.src = image.dataset.fullSrc;
+                lightbox.classList.remove("is-loading");
+                lightboxStatus.textContent = "";
             });
 
             carouselRing.appendChild(card);
@@ -143,6 +162,18 @@
             });
         }
 
+        function preloadImage(imageName) {
+            const image = new Image();
+            image.src = `Bilder/${imageName}`;
+        }
+
+        function preloadNearbyImages() {
+            const nearbyIndexes = [-1, 0, 1].map((offset) => (
+                (selectedIndex + offset + images.length) % images.length
+            ));
+            nearbyIndexes.forEach((index) => preloadImage(images[index]));
+        }
+
         function updateSelectionFromRotation() {
             currentStep = Math.round(-rotation / stepAngle);
             selectedIndex = ((currentStep % images.length) + images.length) % images.length;
@@ -154,6 +185,7 @@
             selectedIndex = ((currentStep % images.length) + images.length) % images.length;
             rotation = -currentStep * stepAngle;
             renderCarousel();
+            preloadNearbyImages();
         }
 
         carouselStage.addEventListener("wheel", (event) => {
@@ -215,7 +247,9 @@
 
         lightbox.addEventListener("click", () => {
             lightbox.classList.remove("is-open");
+            lightbox.classList.remove("is-loading");
             lightboxImage.src = "";
+            lightboxStatus.textContent = "";
         });
 
         document.addEventListener("keydown", (event) => {
@@ -238,11 +272,14 @@
 
             if (event.key === "Escape" && lightbox.classList.contains("is-open")) {
                 lightbox.classList.remove("is-open");
+                lightbox.classList.remove("is-loading");
                 lightboxImage.src = "";
+                lightboxStatus.textContent = "";
             }
         });
 
         renderCarousel();
+        preloadNearbyImages();
     </script>
 </body>
 </html>

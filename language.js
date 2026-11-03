@@ -1,10 +1,11 @@
+(() => {
 const languageStorageKey = "portfolio-language";
 const supportedLanguages = ["en", "no"];
 
 const translations = {
     en: {
         common: {
-            home: "Home",
+            home: "Main Page",
             cv: "CV",
             gallery: "Gallery",
             about: "About me",
@@ -18,8 +19,8 @@ const translations = {
             title: "My portfolio",
             heroLabel: "Highlands landscape",
             cardLabel: "Business card",
-            contact: "Contact me",
-            email: "Email:",
+            contact: "Get in touch",
+            email: "E-mail:",
             phone: "Phone:",
             funFactAria: "Fun fact about the front page",
             funFact: "Vancouver uses “sea to sky” to advertise a range of gondolas. We should have moved Galdhøpiggen to the Oslo Fjord."
@@ -42,6 +43,7 @@ const translations = {
             title: "Gallery - My portfolio",
             carouselAria: "3D image carousel. Use the left and right arrow keys or drag to browse.",
             lightboxAria: "Enlarged image",
+            loadingImage: "Loading image ...",
             funFactAria: "Fun fact about the gallery",
             funFact: "The gallery contains 22 images that can be opened in a larger view."
         },
@@ -107,13 +109,20 @@ const translations = {
 };
 
 function getLanguage() {
+    const queryLanguage = new URLSearchParams(window.location.search).get("lang");
+    if (supportedLanguages.includes(queryLanguage)) {
+        window.localStorage.setItem(languageStorageKey, queryLanguage);
+        return queryLanguage;
+    }
     const storedLanguage = window.localStorage.getItem(languageStorageKey);
     return supportedLanguages.includes(storedLanguage) ? storedLanguage : "no";
 }
 
 function setLanguage(language) {
     window.localStorage.setItem(languageStorageKey, language);
-    window.location.reload();
+    const url = new URL(window.location.href);
+    url.searchParams.set("lang", language);
+    window.location.assign(url.href);
 }
 
 function currentPage() {
@@ -122,35 +131,52 @@ function currentPage() {
 
 function addLanguageSwitcher(language) {
     const navigation = document.querySelector("nav ul");
-    if (!navigation || document.querySelector(".language-switcher")) {
+    if (!navigation) {
         return;
     }
 
-    const item = document.createElement("li");
-    item.className = "language-switcher";
-    const english = document.createElement("a");
-    english.href = "#";
+    let item = document.querySelector(".language-switcher");
+    if (!item) {
+        item = document.createElement("li");
+        item.className = "language-switcher";
+        navigation.prepend(item);
+    }
+
+    const english = item.querySelector(".language-english") || document.createElement("a");
+    english.href = "?lang=en";
+    english.className = "language-english";
     english.textContent = "EN";
-    english.className = language === "en" ? "is-active" : "";
+    english.classList.toggle("is-active", language === "en");
     english.setAttribute("aria-label", "Switch to English");
+    if (!english.parentElement) {
+        item.append(english);
+    }
     english.addEventListener("click", (event) => {
         event.preventDefault();
         setLanguage("en");
     });
-    const separator = document.createElement("span");
+
+    let separator = item.querySelector("span");
+    if (!separator) {
+        separator = document.createElement("span");
+        item.append(separator);
+    }
     separator.textContent = " | ";
     separator.setAttribute("aria-hidden", "true");
-    const norwegian = document.createElement("a");
-    norwegian.href = "#";
+
+    const norwegian = item.querySelector(".language-norwegian") || document.createElement("a");
+    norwegian.href = "?lang=no";
+    norwegian.className = "language-norwegian";
     norwegian.textContent = "NO";
-    norwegian.className = language === "no" ? "is-active" : "";
+    norwegian.classList.toggle("is-active", language === "no");
     norwegian.setAttribute("aria-label", "Bytt til norsk");
+    if (!norwegian.parentElement) {
+        item.append(norwegian);
+    }
     norwegian.addEventListener("click", (event) => {
         event.preventDefault();
         setLanguage("no");
     });
-    item.append(english, separator, norwegian);
-    navigation.prepend(item);
 }
 
 function setText(selector, text) {
@@ -216,6 +242,7 @@ function translatePage(language) {
         document.title = content.gallery.title;
         document.querySelector(".carousel-stage")?.setAttribute("aria-label", content.gallery.carouselAria);
         document.querySelector(".image-lightbox")?.setAttribute("aria-label", content.gallery.lightboxAria);
+        setText(".image-lightbox-status", content.gallery.loadingImage);
         document.querySelector(".fun-fact")?.setAttribute("aria-label", content.gallery.funFactAria);
         setText(".fun-fact p", content.gallery.funFact);
     } else if (page === "om-meg.html") {
@@ -285,3 +312,4 @@ addLanguageSwitcher(language);
 translateCommon(language);
 translatePage(language);
 window.siteLanguage = language;
+})();

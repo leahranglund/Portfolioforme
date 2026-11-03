@@ -858,10 +858,25 @@ section {
     max-width: min(90vw, 1400px);
     max-height: 90vh;
     object-fit: contain;
-    border: 8px solid #fff;
+    border: 3px solid #fff;
     border-radius: 3px;
     box-shadow: 0 16px 48px rgb(0 0 0 / 30%);
     cursor: pointer;
+}
+
+.image-lightbox-status {
+    position: absolute;
+    margin: 0;
+    color: #fff;
+    font-size: 1rem;
+}
+
+.image-lightbox.is-loading img {
+    visibility: hidden;
+}
+
+.image-lightbox:not(.is-loading) .image-lightbox-status {
+    display: none;
 }
 
 h1 {
