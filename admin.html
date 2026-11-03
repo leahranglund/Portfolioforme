@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="styles.css?v=20261014-21">
     <script src="fun-fact.js?v=20261013-1" defer></script>
     <script src="cookie-consent.js?v=20261103-1" defer></script>
+    <script src="language.js?v=20261103-1" defer></script>
 </head>
 <body class="cookie-consent-pending">
     <header>
@@ -45,10 +46,14 @@
                     <input id="certification-id" name="id" type="hidden">
                     <label for="certification-title">Navn</label>
                     <input id="certification-title" name="title" type="text" maxlength="160" required>
+                    <label for="certification-title-en">English name</label>
+                    <input id="certification-title-en" name="title_en" type="text" maxlength="160">
                     <label for="certification-provider">Kursleverandør</label>
                     <input id="certification-provider" name="provider" type="text" maxlength="160">
                     <label for="certification-description">Beskrivelse</label>
                     <textarea id="certification-description" name="description" rows="4" maxlength="2000"></textarea>
+                    <label for="certification-description-en">English description</label>
+                    <textarea id="certification-description-en" name="description_en" rows="4" maxlength="2000"></textarea>
                     <label for="certification-status">Status</label>
                     <select id="certification-status" name="status">
                         <option value="">Ikke angitt</option>

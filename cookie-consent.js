@@ -1,6 +1,24 @@
 const analyticsId = "G-W4219BJLY5";
 const consentStorageKey = "portfolio-analytics-consent";
-const cookieMessage = "Her skulle man kanskje ønske at det ble servert en deilig, varm cookie. Dessverre er det bare jeg som gjerne ønsker å følge analysen av eget nettsted med Google Analytics.";
+const languageStorageKey = "portfolio-language";
+const cookieCopy = {
+    no: {
+        title: "Informasjonskapsler",
+        message: "Her skulle man kanskje ønske at det ble servert en deilig, varm cookie. Dessverre er det bare jeg som gjerne ønsker å følge analysen av eget nettsted med Google Analytics.",
+        accept: "Godkjenn",
+        decline: "Avslå"
+    },
+    en: {
+        title: "Cookies",
+        message: "You might hope for a delicious, warm cookie here. Unfortunately, I would simply like to use Google Analytics to understand how my own website is used.",
+        accept: "Accept",
+        decline: "Decline"
+    }
+};
+
+function getLanguage() {
+    return window.localStorage.getItem(languageStorageKey) === "en" ? "en" : "no";
+}
 
 function getStoredConsent() {
     try {
@@ -43,6 +61,7 @@ function showFunFacts() {
 }
 
 function createBanner() {
+    const copy = cookieCopy[getLanguage()];
     const banner = document.createElement("aside");
     banner.className = "cookie-consent";
     banner.setAttribute("role", "dialog");
@@ -58,10 +77,10 @@ function createBanner() {
     content.className = "cookie-consent-content";
     const title = document.createElement("h2");
     title.id = "cookie-consent-title";
-    title.textContent = "Informasjonskapsler";
+    title.textContent = copy.title;
     const message = document.createElement("p");
     message.id = "cookie-consent-message";
-    message.textContent = cookieMessage;
+    message.textContent = copy.message;
     content.append(title, message);
 
     const actions = document.createElement("div");
@@ -69,11 +88,11 @@ function createBanner() {
     const acceptButton = document.createElement("button");
     acceptButton.type = "button";
     acceptButton.className = "cookie-consent-accept";
-    acceptButton.textContent = "Godkjenn";
+    acceptButton.textContent = copy.accept;
     const declineButton = document.createElement("button");
     declineButton.type = "button";
     declineButton.className = "cookie-consent-decline";
-    declineButton.textContent = "Avslå";
+    declineButton.textContent = copy.decline;
     actions.append(acceptButton, declineButton);
     banner.append(image, content, actions);
     document.body.append(banner);

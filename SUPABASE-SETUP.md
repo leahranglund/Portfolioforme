@@ -42,10 +42,10 @@ repository.
 
 After the site is deployed, open `admin.html` directly and sign in with the user
 created above. Add, edit, publish, hide, reorder, or delete certifications and
-courses there. For each item, use **Beskrivelse** for the short explanation that
-appears when a visitor opens the course box, and **Lenke til sertifikat** for a
-certificate or course URL. Published items appear as expandable boxes on
-`Sertifiseringer.html`.
+courses there. For each item, use **Beskrivelse** and **English description** for
+the short explanations shown when a visitor opens the course box. Use **Lenke
+til sertifikat** for a certificate or course URL. Published items appear as
+expandable boxes on `Sertifiseringer.html`.
 
 ## 5. First-time checklist
 

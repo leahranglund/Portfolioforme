@@ -9,8 +9,10 @@ const cancelEditButton = document.querySelector("#cancel-edit");
 const fields = {
     id: document.querySelector("#certification-id"),
     title: document.querySelector("#certification-title"),
+    titleEn: document.querySelector("#certification-title-en"),
     provider: document.querySelector("#certification-provider"),
     description: document.querySelector("#certification-description"),
+    descriptionEn: document.querySelector("#certification-description-en"),
     status: document.querySelector("#certification-status"),
     completedOn: document.querySelector("#certification-date"),
     credentialUrl: document.querySelector("#certification-url"),
@@ -72,7 +74,7 @@ function renderAdminCertification(certification) {
 async function loadCertifications() {
     const { data, error } = await supabase
         .from("certifications")
-        .select("id, title, provider, description, status, completed_on, credential_url, sort_order, is_published, created_at")
+        .select("id, title, title_en, provider, description, description_en, status, completed_on, credential_url, sort_order, is_published, created_at")
         .order("sort_order", { ascending: true })
         .order("created_at", { ascending: false });
 
@@ -152,8 +154,10 @@ if (!isSupabaseConfigured || !supabase) {
         event.preventDefault();
         const certification = {
             title: fields.title.value.trim(),
+            title_en: fields.titleEn.value.trim(),
             provider: fields.provider.value.trim(),
             description: fields.description.value.trim(),
+            description_en: fields.descriptionEn.value.trim(),
             status: fields.status.value || null,
             completed_on: fields.completedOn.value || null,
             credential_url: fields.credentialUrl.value.trim() || null,
@@ -206,8 +210,10 @@ if (!isSupabaseConfigured || !supabase) {
             }
             fields.id.value = certification.id;
             fields.title.value = certification.title;
+            fields.titleEn.value = certification.title_en || "";
             fields.provider.value = certification.provider || "";
             fields.description.value = certification.description || "";
+            fields.descriptionEn.value = certification.description_en || "";
             fields.status.value = certification.status;
             fields.completedOn.value = certification.completed_on || "";
             fields.credentialUrl.value = certification.credential_url || "";
